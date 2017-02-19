@@ -11,6 +11,7 @@
 \setlength{\parindent}{0 in}
 \setlength{\parskip}{0.1 in}
 
+% If you put knitr2tex.py in different directory to tex files, change it, the spaces at beginging and end of the \detokenize command are necessary
 \def\cmdPath{\detokenize{ knitr2tex.py }}
 % Arguments: source code path, output path, start line, end line
 % The fifth argument contain all other options
@@ -44,5 +45,5 @@ If you only want to show several lines without evaluating them, use the option b
 \begin{verbatim}
 \smartknitr{R_source}{tex_output}{start_line}{end_line}{0 (option)first_display_line}
 \end{verbatim}
-\smartknitr{test.R}{sub3.tex}{1}{15}{0 5}
+\smartknitr{test.R}{sub3.tex}{5}{15}{0}
 \end{document}

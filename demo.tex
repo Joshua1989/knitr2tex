@@ -1,0 +1,48 @@
+%!TEX option=--shell-escape
+\documentclass[twoside]{article}
+\IfFileExists{Rstyle.tex}{\input{Rstyle}}{}
+\interdisplaylinepenalty=2500
+\setlength{\oddsidemargin}{0 in}
+\setlength{\evensidemargin}{0 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+\def\cmdPath{\detokenize{ knitr2tex.py }}
+% Arguments: source code path, output path, start line, end line
+% The fifth argument contain all other options
+% the first option is to choose show souce and run (1), or only show source (0)
+% the second option gives the first displayed line
+\def\knitr#1#2#3#4#5{
+    \immediate\write18{python \cmdPath \detokenize{#1 #2 #3 #4 #5}}
+    \input{#2}
+}
+% Smart knitr first checks if the sub-tex file exists, if not then run knitr
+\def\smartknitr#1#2#3#4#5{
+    \IfFileExists{#2}{\input{#2}}{\knitr{#1}{#2}{#3}{#4}{#5}}
+}
+
+\begin{document}
+Embed the source code and its output of the R code
+\begin{verbatim}
+\smartknitr{R_source}{tex_output}{start_line}{end_line}{1}
+\end{verbatim}
+\smartknitr{test.R}{sub1.tex}{1}{15}{1}
+
+Embed the source code and its output of the R code, but omit first 4 lines, the source code start display from the fifth line.
+Sometimes you need to use functions from third-party packages, but if you set the start line below the library loading command, knitr will throw an error.
+This is useful when you do not want to show the library loading lines.
+\begin{verbatim}
+\smartknitr{R_source}{tex_output}{start_line}{end_line}{1 first_display_line}
+\end{verbatim}
+\smartknitr{test.R}{sub2.tex}{1}{15}{1 5}
+
+If you only want to show several lines without evaluating them, use the option below
+\begin{verbatim}
+\smartknitr{R_source}{tex_output}{start_line}{end_line}{0 (option)first_display_line}
+\end{verbatim}
+\smartknitr{test.R}{sub3.tex}{1}{15}{0 5}
+\end{document}
